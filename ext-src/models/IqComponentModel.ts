@@ -108,14 +108,20 @@ export class IqComponentModel implements ComponentModel {
               progress.report({message: "Morphing results into something usable", increment: 90});
               for (let resultEntry of resultData.results) {
                 let componentEntry: ComponentEntry | undefined;
-      
+
+                let entryName = componentContainer.PackageMuncher.ConvertToComponentEntry(resultEntry);
                 componentEntry = this.coordsToComponent.get(
-                  componentContainer.PackageMuncher.ConvertToComponentEntry(resultEntry)
+                  entryName
                 );
               
-                componentEntry!.policyViolations = resultEntry.policyData.policyViolations as Array<PolicyViolation>;
-                componentEntry!.hash = resultEntry.component.hash;
-                componentEntry!.nexusIQData = resultEntry;
+                if (componentEntry) {
+                  componentEntry!.policyViolations = resultEntry.policyData.policyViolations as Array<PolicyViolation>;
+                  componentEntry!.hash = resultEntry.component.hash;
+                  componentEntry!.nexusIQData = resultEntry;
+                }
+                else {
+                  window.showErrorMessage(`Nexus IQ extension unexpected missing entry: ${entryName}`)
+                }
               }
               resolve();
             }).then(() => {
