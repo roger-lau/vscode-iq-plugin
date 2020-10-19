@@ -90,6 +90,10 @@ export class PyPIDependencies extends PackageDependenciesHelper implements Packa
         coordinates.asCoordinates(),
         componentEntry
       );
+      this.CoordinatesToComponents.set(
+        coordinates.asCoordinates().toLowerCase(), // IQ answer PyPI package as lowercase...
+        componentEntry
+      );
     }
     return components;
   }
